@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "984710194523",
+    "project_id": "flutter-example-1b",
+    "storage_bucket": "flutter-example-1b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984710194523:android:8925e31310e13721d8a67e",
+        "android_client_info": {
+          "package_name": "com.example.firebaselesson"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhVOzZsyp5vP2sd1l7nrWHGHP7l3v8pKE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
