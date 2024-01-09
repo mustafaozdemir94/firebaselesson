@@ -7,7 +7,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MaterialApp(
     home: Scaffold(
-      body: Text("Merhaba"),
+      body: Center(child: Text("Merhaba")),
     ),
   ));
 }
