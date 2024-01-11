@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+// firebase auth n yardımcı fonksiyonu tanımlıyoruz.
 final firebaseAuthInstance = FirebaseAuth.instance;
 
 class Auth extends StatefulWidget {
