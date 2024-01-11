@@ -1,17 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebaselesson/firebase_options.dart';
+import 'package:firebaselesson/screens/auth.dart';
+import 'package:firebaselesson/screens/home.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MaterialApp(
+
+  runApp(MaterialApp(
     home: Scaffold(
-      body: Center(child: Text("Merhaba")),
-    ),
+        body: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return const Home();
+              }
+              return const Auth();
+            })),
   ));
 }
 
-
-//async yapıpı await komutunu ekliyoruz
-//flutter ile firebase'in aynı anda ayağa kalkması için satır 6 daki komutu yazıyoruz. (önerilen bir uygulama değil)
+// StreamBuilder
