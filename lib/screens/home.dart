@@ -32,13 +32,25 @@ class _HomeState extends State<Home> {
   void _uploadImage() async {
     if (_selectedImage != null) {
       User? loggedInUser = firebaseAuthInstance.currentUser;
-      final storageRef = firebaseStorageInstance.ref().child("images").child(loggedInUser!.uid);
+
+      final storageRef = firebaseStorageInstance.ref().child("images").child("${loggedInUser!.uid}.jpg");
 
       await storageRef.putFile(_selectedImage!);
 
       final url = await storageRef.getDownloadURL();
-      firebaseFireStore.collection("users").doc(loggedInUser.uid).update({'imageUrl': url});
+
+      await firebaseFireStore.collection("users").doc(loggedInUser.uid).update({'imageUrl': url});
     }
+  }
+
+  Future<String> _getUserImage() async {
+    User? loggedInUser = firebaseAuthInstance.currentUser;
+    final document = firebaseFireStore.collection("users").doc(loggedInUser!.uid);
+    final documentSnapshot = await document.get();
+
+    final imageUrl = await documentSnapshot.get("imageUrl");
+
+    return imageUrl;
   }
 
   @override
@@ -53,20 +65,31 @@ class _HomeState extends State<Home> {
       ]),
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          CircleAvatar(
-            radius: 40,
-            foregroundImage: _selectedImage != null ? FileImage(_selectedImage!) : null,
-          ),
+          if (_selectedImage == null)
+            FutureBuilder(
+                future: _getUserImage(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                    return CircleAvatar(
+                        backgroundColor: Colors.white, radius: 40, foregroundImage: NetworkImage(snapshot.data!));
+                  }
+                  if (snapshot.hasError) {
+                    return const Text("Avatar yüklenirken bir hata oluştu..");
+                  }
+                  return const CircularProgressIndicator();
+                }),
+          if (_selectedImage != null) CircleAvatar(radius: 40, foregroundImage: FileImage(_selectedImage!)),
           TextButton(
               onPressed: () {
                 _pickImage();
               },
               child: const Text("Resim Seç")),
-          ElevatedButton(
-              onPressed: () {
-                _uploadImage();
-              },
-              child: const Text("Yükle"))
+          if (_selectedImage != null)
+            ElevatedButton(
+                onPressed: () {
+                  _uploadImage();
+                },
+                child: const Text("Yükle"))
         ]),
       ),
     );
